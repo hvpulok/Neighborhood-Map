@@ -1,0 +1,12 @@
+.footer-area{
+    color: black;
+    text-align: center;
+}
+
+.navbar-bottom{
+    background-color: whitesmoke;
+    height: 200px;
+    margin: 0;
+    border-radius: 0;
+    border-top: 0.3px solid gainsboro;
+}
