@@ -4,6 +4,7 @@ console.log("goggle script is connected");
 var map;
 var infoWindow;
 var service;
+var placeNames = [];
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -28,7 +29,7 @@ function initMap() {
 function performSearch() {
     var request = {
         bounds: map.getBounds(),
-        keyword: 'Starbucks'
+        keyword: 'rtd'
     };
     service.radarSearch(request, callback);
 }
@@ -38,9 +39,13 @@ function callback(results, status) {
         console.error(status);
         return;
     }
+
     for (var i = 0, result; result = results[i]; i++) {
         addMarker(result);
+        updatePlaceNames(result);
     }
+    // console.log(placeNames);
+    console.log(placeNames.length);
 }
 
 function addMarker(place) {
@@ -69,4 +74,10 @@ function addMarker(place) {
             infoWindow.open(map, marker);
         });
     });
+}
+
+function updatePlaceNames(place) {
+    if (placeNames.indexOf(place.place_id) === -1) {
+        placeNames.push(place.place_id);
+    }
 }
