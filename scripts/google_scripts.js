@@ -29,7 +29,7 @@ function initMap() {
 function performSearch() {
     var request = {
         bounds: map.getBounds(),
-        keyword: 'rtd'
+        keyword: currentPlace()
     };
     service.radarSearch(request, callback);
 }
@@ -85,6 +85,7 @@ function updatePlaceNames(place) {
 function AppViewModel() {
     var self = this;
     self.selectedPlace = ko.observable();
+    currentPlace = ko.observable("pizza");
     placeNames = ko.observableArray([]);
 
     // Behaviours
@@ -117,6 +118,11 @@ function AppViewModel() {
                 infoWindow.open(map, marker);
             });
         };
+
+    self.updateMap = function () {
+        placeNames([]);
+        initMap();
+    }
 }
 
 // Activates knockout.js
