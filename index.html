@@ -53,7 +53,11 @@
                 <br>
                 <div class="search-result">
                     <div class="list-group " data-bind="foreach: placeNames">
-                        <a href="#" class="list-group-item" data-bind="text: $data"></a>
+                        <a href="#" class="list-group-item"
+                           data-bind="text: $data,
+                           css: { active: $data == $root.selectedPlace() },
+                           click: $root.viewPlaceDetails"
+                        ></a>
                     </div>
                 </div>
 

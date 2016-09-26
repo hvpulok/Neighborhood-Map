@@ -52,7 +52,6 @@ function addMarker(place) {
     var marker = new google.maps.Marker({
         map: map,
         position: place.geometry.location,
-        title: place.name,
         icon: {
             url: 'http://maps.gstatic.com/mapfiles/circle.png',
             anchor: new google.maps.Point(10, 10),
@@ -84,7 +83,40 @@ function updatePlaceNames(place) {
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 function AppViewModel() {
-    self.placeNames = ko.observableArray([]);
+    var self = this;
+    self.selectedPlace = ko.observable();
+    placeNames = ko.observableArray([]);
+
+    // Behaviours
+    self.viewPlaceDetails = function(place)
+        {
+            self.selectedPlace(place);
+            var request = {
+                placeId: self.selectedPlace()
+            };
+
+            service.getDetails(request, function(result, status) {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                    console.error(status);
+                    return;
+                }
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: result.geometry.location,
+                    icon: {
+                        url: 'http://maps.gstatic.com/mapfiles/circle.png',
+                        anchor: new google.maps.Point(10, 10),
+                        scaledSize: new google.maps.Size(20, 34)
+                    }
+                });
+                infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
+                    'Place ID: ' + result.place_id + '<br>' +
+                    result.formatted_address + '<br>' +
+                    result.formatted_phone_number + '<br>' +
+                    '</div>');
+                infoWindow.open(map, marker);
+            });
+        };
 }
 
 // Activates knockout.js
