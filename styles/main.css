@@ -4,9 +4,33 @@
 }
 
 .navbar-bottom{
-    background-color: whitesmoke;
-    height: 200px;
+    background-color: white;
+    height: 25%;
     margin: 0;
     border-radius: 0;
     border-top: 0.3px solid gainsboro;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    height: 100%;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+}
+
+.main-placeholder{
+    height: 80%;
+    margin: 0;
+    padding: 0;
+}
+
+.map-placeholder{
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }

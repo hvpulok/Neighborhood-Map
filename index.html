@@ -38,6 +38,25 @@
     </div>
 </nav>
 
+<div class="row main-placeholder">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Fiter</button>
+                    </span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+    </div>
+    <div class="col-md-9 map-placeholder">
+        <div id="map"></div>
+    </div>
+</div>
+
+<br>
 
 <footer>
     <nav class="navbar navbar-default navbar-bottom">
@@ -48,7 +67,8 @@
         </div>
     </nav>
 </footer>
-<!--script linking strats here--->
+
+<!--script linking starts here--->
 
 <!--jQuery CDN link-->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -57,7 +77,12 @@
 <!--knockoutJS CDN Link-->
 <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js"></script>
 
-<!--local script link-->
 
+<!--Google Places service library-->
+<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIrg_QFAaEFlxhBUoTRECVzKIh-lTGW24&libraries=places"></script>-->
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIrg_QFAaEFlxhBUoTRECVzKIh-lTGW24&callback=initMap&libraries=places,visualization" async defer></script>
+<!--local script link-->
+<script src="scripts/google_scripts.js"></script>
 </body>
 </html>
