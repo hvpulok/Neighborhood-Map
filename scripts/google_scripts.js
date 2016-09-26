@@ -4,7 +4,7 @@ console.log("goggle script is connected");
 var map;
 var infoWindow;
 var service;
-var placeNames = [];
+
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -45,7 +45,7 @@ function callback(results, status) {
         updatePlaceNames(result);
     }
     // console.log(placeNames);
-    console.log(placeNames.length);
+    console.log(placeNames().length);
 }
 
 function addMarker(place) {
@@ -81,3 +81,11 @@ function updatePlaceNames(place) {
         placeNames.push(place.place_id);
     }
 }
+
+// This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+function AppViewModel() {
+    self.placeNames = ko.observableArray([]);
+}
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());

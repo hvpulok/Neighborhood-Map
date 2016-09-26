@@ -1,16 +1,3 @@
-.footer-area{
-    color: black;
-    text-align: center;
-}
-
-.navbar-bottom{
-    background-color: white;
-    height: 25%;
-    margin: 0;
-    border-radius: 0;
-    border-top: 0.3px solid gainsboro;
-}
-
 html, body {
     height: 100%;
     margin: 0;
@@ -33,4 +20,24 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+.search-result{
+    max-height: 700px;
+    min-height: 300px;
+    overflow-y: auto;
+}
+
+.footer-area{
+    color: black;
+    text-align: center;
+    border-top: 0.3px solid gainsboro;
+}
+
+.navbar-bottom{
+    background-color: white;
+    height: 20px;
+    margin: 0;
+    border-radius: 0;
+
 }
