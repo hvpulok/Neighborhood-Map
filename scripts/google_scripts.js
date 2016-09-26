@@ -47,10 +47,11 @@ function addMarker(place) {
     var marker = new google.maps.Marker({
         map: map,
         position: place.geometry.location,
+        title: place.name,
         icon: {
             url: 'http://maps.gstatic.com/mapfiles/circle.png',
             anchor: new google.maps.Point(10, 10),
-            scaledSize: new google.maps.Size(10, 17)
+            scaledSize: new google.maps.Size(20, 34)
         }
     });
 
@@ -60,7 +61,11 @@ function addMarker(place) {
                 console.error(status);
                 return;
             }
-            infoWindow.setContent(result.name);
+            infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
+                'Place ID: ' + result.place_id + '<br>' +
+                result.formatted_address + '<br>' +
+                result.formatted_phone_number + '<br>' +
+                '</div>');
             infoWindow.open(map, marker);
         });
     });
