@@ -122,7 +122,12 @@ function AppViewModel() {
     self.updateMap = function () {
         placeNames([]);
         initMap();
-    }
+    };
+
+    self.resetMap = function () {
+        currentPlace("pizza");
+        initMap();
+    };
 }
 
 // Activates knockout.js
