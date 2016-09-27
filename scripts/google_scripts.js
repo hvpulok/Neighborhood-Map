@@ -126,6 +126,7 @@ function AppViewModel() {
 
     self.resetMap = function () {
         currentPlace("pizza");
+        placeNames([]);
         initMap();
     };
 }
