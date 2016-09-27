@@ -4,7 +4,7 @@ console.log("goggle script is connected");
 var map;
 var infoWindow;
 var service;
-
+var markers = [];
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -31,7 +31,7 @@ function performSearch() {
         bounds: map.getBounds(),
         keyword: currentPlace()
     };
-    service.radarSearch(request, callback);
+    service.nearbySearch(request, callback);
 }
 
 function callback(results, status) {
@@ -39,12 +39,15 @@ function callback(results, status) {
         console.error(status);
         return;
     }
+    // remove all existing placenames in the array
+    placeNames([]);
+    // remove all existing markers from the map
+    deleteMarkers();
 
     for (var i = 0, result; result = results[i]; i++) {
         addMarker(result);
         updatePlaceNames(result);
     }
-    // console.log(placeNames);
     console.log(placeNames().length);
 }
 
@@ -58,6 +61,7 @@ function addMarker(place) {
             scaledSize: new google.maps.Size(20, 34)
         }
     });
+    markers.push(marker);
 
     google.maps.event.addListener(marker, 'click', function() {
         service.getDetails(place, function(result, status) {
@@ -76,9 +80,19 @@ function addMarker(place) {
 }
 
 function updatePlaceNames(place) {
-    if (placeNames.indexOf(place.place_id) === -1) {
-        placeNames.push(place.place_id);
+    placeNames.push(place);
+}
+
+// Sets the map on all markers in the array.
+function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
     }
+}
+
+function deleteMarkers() {
+    setMapOnAll(null);
+    markers = [];
 }
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
@@ -91,7 +105,8 @@ function AppViewModel() {
     // Behaviours
     self.viewPlaceDetails = function(place)
         {
-            self.selectedPlace(place);
+            console.log(place);
+            self.selectedPlace(place.place_id);
             var request = {
                 placeId: self.selectedPlace()
             };
@@ -130,6 +145,5 @@ function AppViewModel() {
         initMap();
     };
 }
-
 // Activates knockout.js
 ko.applyBindings(new AppViewModel());
