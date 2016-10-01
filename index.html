@@ -38,7 +38,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a class="btn-reset-map" data-bind="click: resetMap"><i class="fa fa-refresh" aria-hidden="true"></i>  Reset Map</a></li>
-                <li><a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i> About</a></li>
+                <li><a data-toggle="modal"  data-target="#aboutModal"><i class="fa fa-sign-out" aria-hidden="true"></i> About</a></li>
             </ul>
         </div>
     </div>
@@ -76,6 +76,27 @@
 </div>
 
 <br>
+
+<!--About Modal-->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="aboutModalLabel">About</h4>
+            </div>
+            <div class="modal-body">
+                <p>Developed By: Md Kamrul Hasan Pulok</p>
+                <p>Project Details: Full Stack Web Developer Nanodegree Project 7- Neighborhood Map</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <footer>
     <!--<nav class="navbar navbar-default navbar-bottom">-->

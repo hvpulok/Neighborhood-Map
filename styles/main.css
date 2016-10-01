@@ -41,6 +41,6 @@ html, body {
     border-radius: 0;
 }
 
-a.btn-reset-map:hover{
+.nav a:hover{
     cursor: pointer;
 }
