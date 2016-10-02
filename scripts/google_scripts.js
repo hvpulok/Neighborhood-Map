@@ -49,6 +49,7 @@ function callback(results, status) {
         updatePlaceNames(result);
     }
     console.log(placeNames().length);
+    OriginalPlaces(placeNames());
 }
 
 function addMarker(place) {
@@ -101,6 +102,9 @@ function AppViewModel() {
     self.selectedPlace = ko.observable();
     currentPlace = ko.observable("pizza");
     placeNames = ko.observableArray([]);
+    OriginalPlaces = ko.observableArray([]);
+    filteredPlaceNames = ko.observableArray([]);
+    currentFilter = ko.observable();
 
     // Behaviours
     self.viewPlaceDetails = function(place)
@@ -144,6 +148,22 @@ function AppViewModel() {
         placeNames([]);
         initMap();
     };
+    
+    self.filterPlaces = function () {
+        filteredPlaceNames([]);
+        if(!currentFilter()) {
+            placeNames(OriginalPlaces());
+        } else {
+            var filter = currentFilter();
+            ko.utils.arrayFilter(OriginalPlaces(), function(prod) {
+                if(prod.name.toLowerCase().includes(filter.toLowerCase())){
+                    filteredPlaceNames.push(prod);
+                }
+            });
+            placeNames(filteredPlaceNames());
+        }
+    }
+
 }
 // Activates knockout.js
 ko.applyBindings(new AppViewModel());
