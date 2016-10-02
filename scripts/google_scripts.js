@@ -49,7 +49,7 @@ function callback(results, status) {
         updatePlaceNames(result);
     }
     console.log(placeNames().length);
-    OriginalPlaces(placeNames());
+    unfilteredPlaceNames(placeNames());
 }
 
 function addMarker(place) {
@@ -102,8 +102,7 @@ function AppViewModel() {
     self.selectedPlace = ko.observable();
     currentPlace = ko.observable("pizza");
     placeNames = ko.observableArray([]);
-    OriginalPlaces = ko.observableArray([]);
-    filteredPlaceNames = ko.observableArray([]);
+    unfilteredPlaceNames = ko.observableArray([]);
     currentFilter = ko.observable();
 
     // Behaviours
@@ -150,17 +149,16 @@ function AppViewModel() {
     };
     
     self.filterPlaces = function () {
-        filteredPlaceNames([]);
+        placeNames([]);
         if(!currentFilter()) {
-            placeNames(OriginalPlaces());
+            placeNames(unfilteredPlaceNames());
         } else {
             var filter = currentFilter();
-            ko.utils.arrayFilter(OriginalPlaces(), function(prod) {
+            ko.utils.arrayFilter(unfilteredPlaceNames(), function(prod) {
                 if(prod.name.toLowerCase().includes(filter.toLowerCase())){
-                    filteredPlaceNames.push(prod);
+                    placeNames.push(prod);
                 }
             });
-            placeNames(filteredPlaceNames());
         }
     }
 
