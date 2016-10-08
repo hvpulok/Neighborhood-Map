@@ -5,10 +5,15 @@ var map;
 var infoWindow;
 var service;
 var markers = [];
-var currentPlace = ko.observable("pizza");
+var currentSearchTerm = ko.observable("pizza");
 var placeNames = ko.observableArray([]);
 var unfilteredPlaceNames = ko.observableArray([]);
 var currentFilter = ko.observable();
+
+if(localStorage.getItem('searchTerm'))
+    currentSearchTerm(localStorage.getItem('searchTerm'));
+else
+    currentSearchTerm("pizza");
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -33,7 +38,7 @@ function initMap() {
 function performSearch() {
     var request = {
         bounds: map.getBounds(),
-        keyword: currentPlace()
+        keyword: currentSearchTerm()
     };
     service.nearbySearch(request, callback);
 }
@@ -139,11 +144,12 @@ function AppViewModel() {
 
     self.updateMap = function () {
         placeNames([]);
+        this.updateLocalStorage(currentSearchTerm());
         initMap();
     };
 
     self.resetMap = function () {
-        currentPlace("pizza");
+        currentSearchTerm("pizza");
         placeNames([]);
         initMap();
     };
@@ -160,8 +166,32 @@ function AppViewModel() {
                 }
             });
         }
-    }
+        this.updateLocalStorage(currentSearchTerm());
+    };
 
+    // code to use local storage to store user search term and filter values
+
+    self.updateLocalStorage = function(searchTerm){
+
+        if(typeof(Storage) == 'undefined'){
+            return "No HTML5 localStorage support"
+        }
+        else{
+            // Try this
+            try {
+                    localStorage.clear();
+                    localStorage.setItem('searchTerm', searchTerm);
+                }
+
+            catch (e) {
+                // If any errors, catch and alert the user
+                if (e == "QUOTA_EXCEEDED_ERR") {
+                    alert('Quota exceeded!');
+                }
+
+            }
+        }
+    }
 }
 // Activates knockout.js
 ko.applyBindings(new AppViewModel());
