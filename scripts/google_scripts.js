@@ -45,7 +45,7 @@ function performSearch() {
 
 function callback(results, status) {
     if (status !== google.maps.places.PlacesServiceStatus.OK) {
-        console.error(status);
+        console.log("No Result Found");
         return;
     }
     // remove all existing placenames in the array
@@ -113,7 +113,7 @@ function AppViewModel() {
     // Behaviours
     self.viewPlaceDetails = function(place)
         {
-            console.log(place);
+            // console.log(place);
             self.selectedPlace(place.place_id);
             var request = {
                 placeId: self.selectedPlace()
@@ -124,21 +124,34 @@ function AppViewModel() {
                     console.error(status);
                     return;
                 }
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: result.geometry.location,
-                    icon: {
-                        url: 'http://maps.gstatic.com/mapfiles/circle.png',
-                        anchor: new google.maps.Point(10, 10),
-                        scaledSize: new google.maps.Size(20, 34)
-                    }
-                });
-                infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
-                    'Place ID: ' + result.place_id + '<br>' +
-                    result.formatted_address + '<br>' +
-                    result.formatted_phone_number + '<br>' +
-                    '</div>');
-                infoWindow.open(map, marker);
+                //function to get yahoo weather data for that location
+                var yahooUrlForWeather = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + result.formatted_address + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+                $.ajax({url: yahooUrlForWeather})
+                    .done(function( weatherData ) {
+                        yahooWeatherData = weatherData.query.results.channel;
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: result.geometry.location,
+                            icon: {
+                                url: 'http://maps.gstatic.com/mapfiles/circle.png',
+                                anchor: new google.maps.Point(10, 10),
+                                scaledSize: new google.maps.Size(20, 34)
+                            }
+                        });
+                        infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
+                            // 'Place ID: ' + result.place_id + '<br>' +
+                            result.formatted_address + '<br>' +
+                            result.formatted_phone_number + '<br><hr>' +
+                            '<strong>'+ yahooWeatherData.title+ '</strong><br>' +
+                            yahooWeatherData.lastBuildDate + '<br> Temperature: ' +
+                            yahooWeatherData.item.condition.temp + '&degF<br>' +
+                            yahooWeatherData.item.description + '<br>' +
+                            '</div>');
+                        infoWindow.open(map, marker);
+                    })
+                    .fail(function() {
+                        console.log( "Failed to get yahoo weather data" );
+                    });
             });
         };
 
