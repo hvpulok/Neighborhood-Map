@@ -5,6 +5,10 @@ var map;
 var infoWindow;
 var service;
 var markers = [];
+var currentPlace = ko.observable("pizza");
+var placeNames = ko.observableArray([]);
+var unfilteredPlaceNames = ko.observableArray([]);
+var currentFilter = ko.observable();
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -100,10 +104,6 @@ function deleteMarkers() {
 function AppViewModel() {
     var self = this;
     self.selectedPlace = ko.observable();
-    currentPlace = ko.observable("pizza");
-    placeNames = ko.observableArray([]);
-    unfilteredPlaceNames = ko.observableArray([]);
-    currentFilter = ko.observable();
 
     // Behaviours
     self.viewPlaceDetails = function(place)
