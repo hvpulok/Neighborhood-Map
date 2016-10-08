@@ -9,15 +9,53 @@ var currentSearchTerm = ko.observable("pizza");
 var placeNames = ko.observableArray([]);
 var unfilteredPlaceNames = ko.observableArray([]);
 var currentFilter = ko.observable();
+var currentLat = ko.observable();
+var currentlong = ko.observable();
 
+// A global function to store key-value pairs in local storage
+updateLocalStorage = function(name, value){
+
+    if(typeof(Storage) == 'undefined'){
+        return "No HTML5 localStorage support"
+    }
+    else{
+        // Try this
+        try {
+            localStorage.setItem(name, value);
+        }
+
+        catch (e) {
+            // If any errors, catch and alert the user
+            if (e == "QUOTA_EXCEEDED_ERR") {
+                alert('Quota exceeded!');
+                localStorage.clear();
+            }
+
+        }
+    }
+};
+
+// code to initialize currentSearchTerm based on users previous history utilizing local storage
 if(localStorage.getItem('searchTerm'))
     currentSearchTerm(localStorage.getItem('searchTerm'));
 else
     currentSearchTerm("pizza");
 
+// code to initialize lat and log based on users previous history utilizing local storage
+if(localStorage.getItem('currentLat'))
+    {
+        currentLat(Number(localStorage.getItem('currentLat')));
+        currentlong(Number(localStorage.getItem('currentlong')));
+    }
+else
+    {
+        currentLat(39.746921);
+        currentlong(-104.999433);
+    }
+
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 39.746921, lng: -104.999433},
+        center: {lat: currentLat(), lng: currentlong()},
         zoom: 14,
         styles: [{
             stylers: [{ visibility: 'simplified' }]
@@ -52,13 +90,19 @@ function callback(results, status) {
     placeNames([]);
     // remove all existing markers from the map
     deleteMarkers();
-
     for (var i = 0, result; result = results[i]; i++) {
         addMarker(result);
         updatePlaceNames(result);
     }
     console.log(placeNames().length);
     unfilteredPlaceNames(placeNames());
+
+    // code to store current location in local storage
+    currentLat (results[0].geometry.location.lat());
+    currentlong (results[0].geometry.location.lng());
+    updateLocalStorage('currentLat', currentLat());
+    updateLocalStorage('currentlong', currentlong());
+
 }
 
 function addMarker(place) {
@@ -157,7 +201,7 @@ function AppViewModel() {
 
     self.updateMap = function () {
         placeNames([]);
-        this.updateLocalStorage(currentSearchTerm());
+        updateLocalStorage('searchTerm', currentSearchTerm());
         initMap();
     };
 
@@ -179,32 +223,12 @@ function AppViewModel() {
                 }
             });
         }
-        this.updateLocalStorage(currentSearchTerm());
+        updateLocalStorage('searchTerm', currentSearchTerm());
     };
 
     // code to use local storage to store user search term and filter values
 
-    self.updateLocalStorage = function(searchTerm){
 
-        if(typeof(Storage) == 'undefined'){
-            return "No HTML5 localStorage support"
-        }
-        else{
-            // Try this
-            try {
-                    localStorage.clear();
-                    localStorage.setItem('searchTerm', searchTerm);
-                }
-
-            catch (e) {
-                // If any errors, catch and alert the user
-                if (e == "QUOTA_EXCEEDED_ERR") {
-                    alert('Quota exceeded!');
-                }
-
-            }
-        }
-    }
 }
 // Activates knockout.js
 ko.applyBindings(new AppViewModel());
