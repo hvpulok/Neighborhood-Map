@@ -14,7 +14,7 @@ function initMap() {
             stylers: [{ visibility: 'simplified' }]
         }, {
             elementType: 'labels',
-            stylers: [{ visibility: 'off' }]
+            stylers: [{ visibility: 'on' }]
         }]
     });
 
