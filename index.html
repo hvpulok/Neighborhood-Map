@@ -43,7 +43,9 @@
         </div>
     </div>
 </nav>
-
+<div data-bind="visible: isAlertMessage" class="alert alert-info container" role="alert">
+    <strong>Alert! </strong><span data-bind="text:alertMessage"></span>
+</div>
 <!-- This is a *view* - HTML markup that defines the appearance of your UI -->
 
 <div class="row main-placeholder">

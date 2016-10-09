@@ -11,6 +11,8 @@ var unfilteredPlaceNames = ko.observableArray([]);
 var currentFilter = ko.observable();
 var currentLat = ko.observable();
 var currentlong = ko.observable();
+var isAlertMessage = ko.observable(false);
+var alertMessage = ko.observable("Alert Message");
 
 // A global function to store key-value pairs in local storage
 updateLocalStorage = function(name, value){
@@ -27,7 +29,8 @@ updateLocalStorage = function(name, value){
         catch (e) {
             // If any errors, catch and alert the user
             if (e == "QUOTA_EXCEEDED_ERR") {
-                alert('Quota exceeded!');
+                isAlertMessage(true);
+                alertMessage("Local storage Quota exceeded!");
                 localStorage.clear();
             }
 
@@ -83,9 +86,12 @@ function performSearch() {
 
 function callback(results, status) {
     if (status !== google.maps.places.PlacesServiceStatus.OK) {
+        isAlertMessage(true);
+        alertMessage("No Result Found for the area, Please zoom out little bit");
         console.log("No Result Found");
         return;
     }
+    isAlertMessage(false); //code to remove any exiting alert message
     // remove all existing placenames in the array
     placeNames([]);
     // remove all existing markers from the map
@@ -95,6 +101,13 @@ function callback(results, status) {
         updatePlaceNames(result);
     }
     console.log(placeNames().length);
+
+    // code to alert user the usage restrctions of Google MAPS API in Search results
+    if(placeNames().length >19){
+        isAlertMessage(true);
+        alertMessage("Since it is using free Google MAPs API search result is restricted to only 20.");
+    }
+
     unfilteredPlaceNames(placeNames());
 
     // code to store current location in local storage
@@ -121,6 +134,8 @@ function addMarker(place) {
         service.getDetails(place, function(result, status) {
             if (status !== google.maps.places.PlacesServiceStatus.OK) {
                 console.error(status);
+                isAlertMessage(true);
+                alertMessage("Error occurred in creating Google Map Marker, Please try zooming out or reset map");
                 return;
             }
             infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
@@ -195,6 +210,9 @@ function AppViewModel() {
                     })
                     .fail(function() {
                         console.log( "Failed to get yahoo weather data" );
+                        isAlertMessage(true);
+                        alertMessage("Failed to get yahoo weather data");
+
                     });
             });
         };
