@@ -241,6 +241,11 @@ function AppViewModel() {
                 }
             });
         }
+        // code to filter map
+        deleteMarkers();
+        for (var i = 0, result; result = placeNames()[i]; i++) {
+            addMarker(result);
+        }
         updateLocalStorage('searchTerm', currentSearchTerm());
     };
 
