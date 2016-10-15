@@ -192,7 +192,8 @@ function showPlaceDetails(place)
                     '<strong>'+ yahooWeatherData.title+ '</strong><br>' +
                     yahooWeatherData.lastBuildDate + '<br> Temperature: ' +
                     yahooWeatherData.item.condition.temp + '&degF<br>' +
-                    yahooWeatherData.item.description + '<br>' +
+                    yahooWeatherData.item.description +
+                    "<a href='https://www.yahoo.com/?ilc=401' target='_blank'> <img src='https://poweredby.yahoo.com/purple.png' width='134' height='29'/> </a>"+
                     '</div>');
                 infoWindow.open(map, marker);
             })
