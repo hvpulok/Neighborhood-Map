@@ -13,6 +13,8 @@ var currentLat = ko.observable();
 var currentlong = ko.observable();
 var isAlertMessage = ko.observable(false);
 var alertMessage = ko.observable("Alert Message");
+var markerClicked = false;
+var idleEventSearch;
 
 // A global function to store key-value pairs in local storage
 updateLocalStorage = function(name, value){
@@ -73,15 +75,33 @@ function initMap() {
 
     // The idle event is a debounced event, so we can query & listen without
     // throwing too many requests at the server.
-    map.addListener('idle', performSearch);
+    // idleEventSearch = map.addListener('idle', performSearch);
+
+    if(markerClicked){
+        google.maps.event.removeListener(idleEventSearch);
+        map.addListener('dragend', performSearch);
+        map.addListener('zoom_changed', performSearch);
+        markerClicked = false;
+    }else
+    {
+        console.log("Inside else");
+        console.log(markerClicked);
+        idleEventSearch = map.addListener('idle', performSearch);
+        map.addListener('dragend', performSearch);
+        map.addListener('zoom_changed', performSearch);
+    }
+
 }
 
 function performSearch() {
+    console.log("performing search...");
     var request = {
         bounds: map.getBounds(),
         keyword: currentSearchTerm()
     };
     service.nearbySearch(request, callback);
+    // reset markerClicked flag to false
+
 }
 
 function callback(results, status) {
@@ -115,7 +135,7 @@ function callback(results, status) {
     currentlong (results[0].geometry.location.lng());
     updateLocalStorage('currentLat', currentLat());
     updateLocalStorage('currentlong', currentlong());
-
+    google.maps.event.removeListener(idleEventSearch);
 }
 
 function addMarker(place) {
@@ -124,6 +144,7 @@ function addMarker(place) {
         position: place.geometry.location,
         icon: {
             url: 'http://maps.gstatic.com/mapfiles/circle.png',
+            // url: place.icon,
             anchor: new google.maps.Point(10, 10),
             scaledSize: new google.maps.Size(20, 34)
         }
@@ -172,6 +193,7 @@ function AppViewModel() {
     // Behaviours
     self.viewPlaceDetails = function(place)
         {
+            markerClicked = true;
             // console.log(place);
             self.selectedPlace(place.place_id);
             var request = {
@@ -192,7 +214,8 @@ function AppViewModel() {
                             map: map,
                             position: result.geometry.location,
                             icon: {
-                                url: 'http://maps.gstatic.com/mapfiles/circle.png',
+                                // url: 'http://maps.gstatic.com/mapfiles/circle.png',
+                                url: result.icon,
                                 anchor: new google.maps.Point(10, 10),
                                 scaledSize: new google.maps.Size(20, 34)
                             }
