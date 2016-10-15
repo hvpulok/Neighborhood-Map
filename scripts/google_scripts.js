@@ -15,6 +15,7 @@ var isAlertMessage = ko.observable(false);
 var alertMessage = ko.observable("Alert Message");
 var markerClicked = false;
 var idleEventSearch;
+var selectedPlace = ko.observable();
 
 // A global function to store key-value pairs in local storage
 updateLocalStorage = function(name, value){
@@ -84,8 +85,6 @@ function initMap() {
         markerClicked = false;
     }else
     {
-        console.log("Inside else");
-        console.log(markerClicked);
         idleEventSearch = map.addListener('idle', performSearch);
         map.addListener('dragend', performSearch);
         map.addListener('zoom_changed', performSearch);
@@ -150,24 +149,62 @@ function addMarker(place) {
         }
     });
     markers.push(marker);
+    // console.log(place);
 
     google.maps.event.addListener(marker, 'click', function() {
-        service.getDetails(place, function(result, status) {
-            if (status !== google.maps.places.PlacesServiceStatus.OK) {
-                console.error(status);
-                isAlertMessage(true);
-                alertMessage("Error occurred in creating Google Map Marker, Please try zooming out or reset map");
-                return;
-            }
-            infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
-                'Place ID: ' + result.place_id + '<br>' +
-                result.formatted_address + '<br>' +
-                result.formatted_phone_number + '<br>' +
-                '</div>');
-            infoWindow.open(map, marker);
-        });
+        showPlaceDetails(place);
     });
 }
+
+function showPlaceDetails(place)
+{
+    markerClicked = true;
+    // console.log(place);
+    selectedPlace(place.place_id);
+    var request = {
+        placeId: selectedPlace()
+    };
+
+    service.getDetails(request, function(result, status) {
+        if (status !== google.maps.places.PlacesServiceStatus.OK) {
+            console.error(status);
+            return;
+        }
+        //function to get yahoo weather data for that location
+        var yahooUrlForWeather = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + result.formatted_address + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+        $.ajax({url: yahooUrlForWeather})
+            .done(function( weatherData ) {
+                yahooWeatherData = weatherData.query.results.channel;
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: result.geometry.location,
+                    icon: {
+                        // url: 'http://maps.gstatic.com/mapfiles/circle.png',
+                        url: result.icon,
+                        anchor: new google.maps.Point(10, 10),
+                        scaledSize: new google.maps.Size(20, 34)
+                    }
+                });
+                infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
+                    // 'Place ID: ' + result.place_id + '<br>' +
+                    result.formatted_address + '<br>' +
+                    result.formatted_phone_number + '<br><hr>' +
+                    '<strong>'+ yahooWeatherData.title+ '</strong><br>' +
+                    yahooWeatherData.lastBuildDate + '<br> Temperature: ' +
+                    yahooWeatherData.item.condition.temp + '&degF<br>' +
+                    yahooWeatherData.item.description + '<br>' +
+                    '</div>');
+                infoWindow.open(map, marker);
+            })
+            .fail(function() {
+                console.log( "Failed to get yahoo weather data" );
+                isAlertMessage(true);
+                alertMessage("Failed to get yahoo weather data");
+
+            });
+    });
+};
+
 
 function updatePlaceNames(place) {
     placeNames.push(place);
@@ -185,60 +222,17 @@ function deleteMarkers() {
     markers = [];
 }
 
+
+
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 function AppViewModel() {
     var self = this;
-    self.selectedPlace = ko.observable();
+    // self.selectedPlace = ko.observable();
 
     // Behaviours
-    self.viewPlaceDetails = function(place)
-        {
-            markerClicked = true;
-            // console.log(place);
-            self.selectedPlace(place.place_id);
-            var request = {
-                placeId: self.selectedPlace()
-            };
-
-            service.getDetails(request, function(result, status) {
-                if (status !== google.maps.places.PlacesServiceStatus.OK) {
-                    console.error(status);
-                    return;
-                }
-                //function to get yahoo weather data for that location
-                var yahooUrlForWeather = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + result.formatted_address + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
-                $.ajax({url: yahooUrlForWeather})
-                    .done(function( weatherData ) {
-                        yahooWeatherData = weatherData.query.results.channel;
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            position: result.geometry.location,
-                            icon: {
-                                // url: 'http://maps.gstatic.com/mapfiles/circle.png',
-                                url: result.icon,
-                                anchor: new google.maps.Point(10, 10),
-                                scaledSize: new google.maps.Size(20, 34)
-                            }
-                        });
-                        infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
-                            // 'Place ID: ' + result.place_id + '<br>' +
-                            result.formatted_address + '<br>' +
-                            result.formatted_phone_number + '<br><hr>' +
-                            '<strong>'+ yahooWeatherData.title+ '</strong><br>' +
-                            yahooWeatherData.lastBuildDate + '<br> Temperature: ' +
-                            yahooWeatherData.item.condition.temp + '&degF<br>' +
-                            yahooWeatherData.item.description + '<br>' +
-                            '</div>');
-                        infoWindow.open(map, marker);
-                    })
-                    .fail(function() {
-                        console.log( "Failed to get yahoo weather data" );
-                        isAlertMessage(true);
-                        alertMessage("Failed to get yahoo weather data");
-
-                    });
-            });
-        };
+    self.viewPlaceDetails = function (place) {
+        showPlaceDetails(place);
+    };
 
     self.updateMap = function () {
         placeNames([]);
