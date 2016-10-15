@@ -232,12 +232,13 @@ function AppViewModel() {
     self.updateMap = function () {
         placeNames([]);
         updateLocalStorage('searchTerm', currentSearchTerm());
+        markerClicked = false;
         initMap();
     };
 
     self.resetMap = function () {
         placeNames([]);
-        initMap();
+        markerClicked = false;
         initMap();
     };
     
