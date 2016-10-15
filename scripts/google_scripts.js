@@ -60,6 +60,7 @@ else
     }
 
 function initMap() {
+    isAlertMessage(false);
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: currentLat(), lng: currentlong()},
         zoom: 14,
@@ -143,7 +144,6 @@ function addMarker(place) {
         position: place.geometry.location,
         icon: {
             url: 'http://maps.gstatic.com/mapfiles/circle.png',
-            // url: place.icon,
             anchor: new google.maps.Point(10, 10),
             scaledSize: new google.maps.Size(20, 34)
         }
@@ -159,6 +159,7 @@ function addMarker(place) {
 function showPlaceDetails(place)
 {
     markerClicked = true;
+    isAlertMessage(false);
     // console.log(place);
     selectedPlace(place.place_id);
     var request = {
@@ -178,12 +179,6 @@ function showPlaceDetails(place)
                 var marker = new google.maps.Marker({
                     map: map,
                     position: result.geometry.location,
-                    icon: {
-                        // url: 'http://maps.gstatic.com/mapfiles/circle.png',
-                        url: result.icon,
-                        anchor: new google.maps.Point(10, 10),
-                        scaledSize: new google.maps.Size(20, 34)
-                    }
                 });
                 infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
                     // 'Place ID: ' + result.place_id + '<br>' +
@@ -241,8 +236,8 @@ function AppViewModel() {
     };
 
     self.resetMap = function () {
-        currentSearchTerm("pizza");
         placeNames([]);
+        initMap();
         initMap();
     };
     
