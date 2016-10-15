@@ -59,6 +59,11 @@ else
         currentlong(-104.999433);
     }
 
+function googleErrorFunction(){
+    isAlertMessage(true);
+    alertMessage("Error in loading Google Maps... Please try again by refreshing this page");
+}
+
 function initMap() {
     isAlertMessage(false);
     map = new google.maps.Map(document.getElementById('map'), {

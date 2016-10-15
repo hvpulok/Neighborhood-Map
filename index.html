@@ -37,7 +37,7 @@
         </form>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a class="btn-reset-map" data-bind="click: resetMap"><i class="fa fa-refresh" aria-hidden="true"></i>  Remove Old Markers</a></li>
+                <li><a class="btn-reset-map" data-bind="click: resetMap"><i class="fa fa-refresh" aria-hidden="true" title="Reset the map and markers"></i>  Remove Selected Markers</a></li>
                 <li><a data-toggle="modal"  data-target="#aboutModal"><i class="fa fa-sign-out" aria-hidden="true"></i> About</a></li>
             </ul>
         </div>
@@ -124,11 +124,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
 
 
-<!--Google Places service library-->
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIrg_QFAaEFlxhBUoTRECVzKIh-lTGW24&libraries=places"></script>-->
-
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIrg_QFAaEFlxhBUoTRECVzKIh-lTGW24&callback=initMap&libraries=places,visualization" async defer></script>
 <!--local script link-->
-<script src="scripts/google_scripts.js"></script>
+<script type="text/javascript" src="scripts/google_scripts.js"></script>
+
+<!--Google Places service library-->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIrg_QFAaEFlxhBUoTRECVzKIh-lTGW24&callback=initMap&libraries=places,visualization" async defer onerror=googleErrorFunction()></script>
+
 </body>
 </html>
