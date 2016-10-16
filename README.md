@@ -1,9 +1,13 @@
 # Neighborhood-Map
 #### Author: Md Kamrul Hasan Pulok
 #### This project is developed as a part of Udacity Full Stack Web Developer Nanodegree Project-7
+[Github Page Link](https://github.com/hvpulok/Neighborhood-Map "Github Page Link")
+
 
 ##Instructions to run the Project:
 * Just open index.html
+* Search for any place of interest like pizza, bar, walmart, bus stop etc
+* It will show a list of places, you can select any place and get detailed information including Yahoo weather data
 
 ##Tools used in this Project:
 * javascript
