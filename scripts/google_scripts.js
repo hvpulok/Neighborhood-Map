@@ -106,7 +106,6 @@ function performSearch() {
     };
     service.nearbySearch(request, callback);
     // reset markerClicked flag to false
-
 }
 
 function callback(results, status) {
@@ -141,6 +140,8 @@ function callback(results, status) {
     updateLocalStorage('currentLat', currentLat());
     updateLocalStorage('currentlong', currentlong());
     google.maps.event.removeListener(idleEventSearch);
+    //applying filter if user already put some filtering value
+    applyFilter();
 }
 
 function addMarker(place) {
@@ -234,7 +235,25 @@ function deleteMarkers() {
     markers = [];
 }
 
-
+function applyFilter() {
+    placeNames([]);
+    if(!currentFilter()) {
+        placeNames(unfilteredPlaceNames());
+    } else {
+        var filter = currentFilter();
+        ko.utils.arrayFilter(unfilteredPlaceNames(), function(prod) {
+            if(prod.name.toLowerCase().includes(filter.toLowerCase())){
+                placeNames.push(prod);
+            }
+        });
+    }
+    // code to filter map
+    deleteMarkers();
+    for (var i = 0, result; result = placeNames()[i]; i++) {
+        addMarker(result);
+    }
+    updateLocalStorage('searchTerm', currentSearchTerm());
+}
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 function AppViewModel() {
@@ -260,23 +279,7 @@ function AppViewModel() {
     };
     
     self.filterPlaces = function () {
-        placeNames([]);
-        if(!currentFilter()) {
-            placeNames(unfilteredPlaceNames());
-        } else {
-            var filter = currentFilter();
-            ko.utils.arrayFilter(unfilteredPlaceNames(), function(prod) {
-                if(prod.name.toLowerCase().includes(filter.toLowerCase())){
-                    placeNames.push(prod);
-                }
-            });
-        }
-        // code to filter map
-        deleteMarkers();
-        for (var i = 0, result; result = placeNames()[i]; i++) {
-            addMarker(result);
-        }
-        updateLocalStorage('searchTerm', currentSearchTerm());
+        applyFilter();
     };
 
     // code to use local storage to store user search term and filter values
