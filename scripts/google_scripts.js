@@ -16,6 +16,7 @@ var alertMessage = ko.observable("Alert Message");
 var markerClicked = false;
 var idleEventSearch;
 var selectedPlace = ko.observable();
+var selectedMarker = ko.observable();
 
 // A global function to store key-value pairs in local storage
 updateLocalStorage = function(name, value){
@@ -95,7 +96,6 @@ function initMap() {
         map.addListener('dragend', performSearch);
         map.addListener('zoom_changed', performSearch);
     }
-
 }
 
 function performSearch() {
@@ -154,7 +154,6 @@ function addMarker(place) {
         }
     });
     markers.push(marker);
-    // console.log(place);
 
     google.maps.event.addListener(marker, 'click', function() {
         showPlaceDetails(place);
@@ -181,10 +180,16 @@ function showPlaceDetails(place)
         $.ajax({url: yahooUrlForWeather})
             .done(function( weatherData ) {
                 yahooWeatherData = weatherData.query.results.channel;
+                //code to remove previous selected marker
+                if(selectedMarker())
+                    selectedMarker().setMap(null);
+                //code to create a new marker in selected position
                 var marker = new google.maps.Marker({
                     map: map,
                     position: result.geometry.location,
+                    animation: google.maps.Animation.DROP
                 });
+                selectedMarker(marker); //storing selected marker in a observable so that later it can be removed
                 infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
                     // 'Place ID: ' + result.place_id + '<br>' +
                     result.formatted_address + '<br>' +
@@ -195,7 +200,7 @@ function showPlaceDetails(place)
                     yahooWeatherData.item.description +
                     "<a href='https://www.yahoo.com/?ilc=401' target='_blank'> <img src='https://poweredby.yahoo.com/purple.png' width='134' height='29'/> </a>"+
                     '</div>');
-                infoWindow.open(map, marker);
+                infoWindow.open(map, selectedMarker());
             })
             .fail(function() {
                 console.log( "Failed to get yahoo weather data" );
