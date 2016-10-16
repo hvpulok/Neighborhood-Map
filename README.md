@@ -1,7 +1,7 @@
 # Neighborhood-Map
 #### Author: Md Kamrul Hasan Pulok
 #### This project is developed as a part of Udacity Full Stack Web Developer Nanodegree Project-7
-[Github Page Link](https://github.com/hvpulok/Neighborhood-Map "Github Page Link")
+[Github Page Link - https://github.com/hvpulok/Neighborhood-Map](https://github.com/hvpulok/Neighborhood-Map "Github Page Link")
 
 
 ##Instructions to run the Project:
