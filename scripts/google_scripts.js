@@ -206,7 +206,13 @@ function showPlaceDetails(place)
                 console.log( "Failed to get yahoo weather data" );
                 isAlertMessage(true);
                 alertMessage("Failed to get yahoo weather data");
-
+                // code to show infowindow with only google data
+                infoWindow.setContent('<div><strong>' + result.name + '</strong><br>' +
+                    // 'Place ID: ' + result.place_id + '<br>' +
+                    result.formatted_address + '<br>' +
+                    result.formatted_phone_number + '<br><hr>'
+                    );
+                infoWindow.open(map, selectedMarker());
             });
     });
 };
