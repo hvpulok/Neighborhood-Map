@@ -46,42 +46,41 @@
 
 <!-- This is a *view* - HTML markup that defines the appearance of your UI -->
 <div class="container-fluid">
-    <div class="row ">
-        <div class="row">
-            <div class="col-md-12">
-                <div data-bind="visible: isAlertMessage" class="alert alert-info container" role="alert">
-                    <strong>Alert! </strong><span data-bind="text:alertMessage"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="col-lg-12 search-result">
-                        <form>
-                            <div class="input-group">
-                                <input data-bind="textInput: currentFilter"  type="text" class="form-control" placeholder="Search for...">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="submit" data-bind="click: filterPlaces">Filter</button>
-                            </span>
-                            </div><!-- /input-group -->
-                        </form>
-                        <br>
-                        <div class="place-list">
-                            <div class="list-group" data-bind="foreach: placeNames">
-                                <a href="#" class="list-group-item"
-                                   data-bind="text: $data.name,
-                               css: { active: $data.place_id == selectedPlace() },
-                               click: $root.viewPlaceDetails"
-                                ></a>
-                            </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-lg-12 search-result">
+                    <form>
+                        <div class="input-group">
+                            <input data-bind="textInput: currentFilter"  type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit" data-bind="click: filterPlaces">Filter</button>
+                        </span>
+                        </div><!-- /input-group -->
+                    </form>
+                    <br>
+                    <div class="place-list">
+                        <div class="list-group" data-bind="foreach: placeNames">
+                            <a href="#" class="list-group-item"
+                               data-bind="text: $data.name,
+                           css: { active: $data.place_id == selectedPlace() },
+                           click: $root.viewPlaceDetails"
+                            ></a>
                         </div>
+                    </div>
 
-                    </div><!-- /.col-lg-6 -->
-                </div><!-- /.row -->
-            </div>
-            <div class="col-md-9 map-placeholder">
-                <div id="map"></div>
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+        </div>
+        <div class="col-md-9 map-placeholder">
+            <div id="map" class="map"></div>
+        </div>
+    </div>
+    <br>
+    <div class="row alert-box">
+        <div class="col-md-12">
+            <div data-bind="visible: isAlertMessage" class="alert alert-info container" role="alert">
+                <strong>Alert! </strong><span data-bind="text:alertMessage"></span>
             </div>
         </div>
     </div>
